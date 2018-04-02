@@ -14,8 +14,15 @@ window.renderStatistics = function (ctx, names, times) {
   var CLOUD_X = 100;
   var CLOUD_Y = 30;
   var GAP = 10;
+  var PADDING_TOP = 20;
+  var PADDING_LEFT = 10;
+  var PADDING_BOTTOM = 20;
+  var COLUMN_WIDTH = 40;
+  var COLUMN_GAP = 50;
+  var COLUMN_PADDING_LEFT = 55;
+  var TOP_TEXT_MARGIN = 5;
 
-  var renderCloud = function (ctx, x, y, color) {
+  var renderCloud = function (canvas, x, y, color) {
     var currentX = x;
     var currentY = y;
 
@@ -60,50 +67,72 @@ window.renderStatistics = function (ctx, names, times) {
 
   ctx.fillStyle = 'rgba(0, 0, 0)';
   ctx.font = '16px PT Mono';
-  ctx.fillText('Ура вы победили!', 120, 50);
-  ctx.fillText('Список результатов:', 120, 70);
+  ctx.fillText('Ура вы победили!', CLOUD_X + PADDING_LEFT, CLOUD_Y + PADDING_TOP);
+  ctx.fillText('Список результатов:', CLOUD_X + PADDING_LEFT, CLOUD_Y + PADDING_TOP * 2);
 
-  var height = [];
+  var heightOfColumns = [];
   var maxTime = Math.round(times[0]);
 
+  // Находим максимальное значение времени
   for (var i = 1; i < times.length; i++) {
     if (times[i] > maxTime) {
       maxTime = Math.round(times[i]);
     }
   }
 
+  // Функция, возвращающая случайное целое число в интервале [min, max]
   var getRandomInt = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  // Рассчитываем высоты колонок
   for (i = 0; i < times.length; i++) {
-    height[i] = Math.round(times[i] / maxTime * 150);
+    heightOfColumns[i] = Math.round(times[i] / maxTime * 150);
   }
 
   var intervals = [];
-  var heightStart = [];
+  var currentHeightOfEachColumns = [];
 
-  for (i = 0; i < height.length; i++) {
-    heightStart[i] = 0;
+  for (i = 0; i < heightOfColumns.length; i++) {
+    currentHeightOfEachColumns[i] = 0;
+
+    // Задаем цвет колонок
     if (names[i] === 'Вы') {
       var fillStyle = 'rgba(255, 0, 0, 1)';
     } else {
       var saturation = getRandomInt(0, 100);
       fillStyle = 'hsl(235, ' + saturation + '%, 27%)';
     }
+
+    // Анимируем отрисовку столбцов
     intervals[i] = setInterval(function (j, fill) {
       ctx.fillStyle = fill;
-      ctx.fillRect(165 + 90 * j, 250, 40, -heightStart[j]);
+      ctx.fillRect(
+          CLOUD_X + COLUMN_PADDING_LEFT + ((COLUMN_WIDTH + COLUMN_GAP) * j),
+          CLOUD_HEIGHT - PADDING_BOTTOM,
+          COLUMN_WIDTH,
+          -currentHeightOfEachColumns[j]
+      );
 
-      if (heightStart[j] >= height[j]) {
+      if (currentHeightOfEachColumns[j] >= heightOfColumns[j]) {
         clearInterval(intervals[j]);
       }
 
-      heightStart[j]++;
+      currentHeightOfEachColumns[j]++;
     }, 4, i, fillStyle);
+
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-    ctx.fillText(names[i], 165 + 90 * i, 265);
+    ctx.fillText(
+        names[i],
+        CLOUD_X + COLUMN_PADDING_LEFT + ((COLUMN_WIDTH + COLUMN_GAP) * i),
+        CLOUD_HEIGHT
+    );
     times[i] = Math.round(times[i]);
-    ctx.fillText(times[i], 165 + 90 * i, 245 - height[i], 40);
+    ctx.fillText(
+        times[i],
+        CLOUD_X + COLUMN_PADDING_LEFT + ((COLUMN_WIDTH + COLUMN_GAP) * i),
+        CLOUD_HEIGHT - PADDING_BOTTOM - TOP_TEXT_MARGIN - heightOfColumns[i],
+        COLUMN_WIDTH
+    );
   }
 };
