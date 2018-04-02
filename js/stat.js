@@ -4,43 +4,59 @@ window.renderStatistics = function (ctx, names, times) {
 
   // Рисуем облако
 
-  
+  var CLOUD_WIDTH = 420;
+  var CLOUD_HEIGHT = 270;
+  var CLOUD_TOP_RINGLETS = 3;
+  var CLOUD_BOTTOM_RINGLETS = 4;
+  var TOP_RINGLET_WIDTH = CLOUD_WIDTH / CLOUD_TOP_RINGLETS;
+  var RINGLET_HEIGTH = 20;
+  var BOTTOM_RINGLET_WIDTH = CLOUD_WIDTH / CLOUD_BOTTOM_RINGLETS;
+  var CLOUD_X = 100;
+  var CLOUD_Y = 30;
+  var GAP = 10;
 
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  var renderCloud = function (ctx, x, y, color) {
+    var currentX = x;
+    var currentY = y;
 
-  ctx.beginPath();
-  ctx.moveTo(110, 40);
-  ctx.quadraticCurveTo(180, 0, 250, 40);
-  ctx.quadraticCurveTo(320, 0, 390, 40);
-  ctx.quadraticCurveTo(460, 0, 530, 40);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(currentX, currentY);
 
-  ctx.lineTo(530, 290);
+    // Рисуем верхнюю кромку облака
 
-  ctx.quadraticCurveTo(477.5, 310, 425, 290);
-  ctx.quadraticCurveTo(372.5, 310, 320, 290);
-  ctx.quadraticCurveTo(267.5, 310, 215, 290);
-  ctx.quadraticCurveTo(162.5, 310, 110, 290);
+    for (var i = 1; i <= CLOUD_TOP_RINGLETS; i++) {
+      var ringletTop = currentY - RINGLET_HEIGTH;
+      currentX += TOP_RINGLET_WIDTH;
+      var ringletMiddle = currentX - TOP_RINGLET_WIDTH / 2;
+      ctx.quadraticCurveTo(ringletMiddle, ringletTop, currentX, currentY);
+    }
 
-  ctx.closePath();
-  ctx.fill();
+    // Рисуем правый край облака
 
-  ctx.fillStyle = 'rgb(255, 255, 255)';
+    currentY += CLOUD_HEIGHT - RINGLET_HEIGTH;
+    ctx.lineTo(currentX, currentY);
 
-  ctx.beginPath();
-  ctx.moveTo(100, 30);
-  ctx.quadraticCurveTo(170, -10, 240, 30);
-  ctx.quadraticCurveTo(310, -10, 380, 30);
-  ctx.quadraticCurveTo(450, -10, 520, 30);
+    // Рисуем нижнюю кромку облака
+    for (i = 1; i <= CLOUD_BOTTOM_RINGLETS; i++) {
+      var ringletBottom = currentY + RINGLET_HEIGTH;
+      currentX -= BOTTOM_RINGLET_WIDTH;
+      ringletMiddle = currentX + BOTTOM_RINGLET_WIDTH / 2;
+      ctx.quadraticCurveTo(ringletMiddle, ringletBottom, currentX, currentY);
+    }
 
-  ctx.lineTo(520, 280);
+    // Рисуем левый край облака
 
-  ctx.quadraticCurveTo(467.5, 300, 415, 280);
-  ctx.quadraticCurveTo(362.5, 300, 310, 280);
-  ctx.quadraticCurveTo(257.5, 300, 205, 280);
-  ctx.quadraticCurveTo(152.5, 300, 100, 280);
+    currentX = x;
+    currentY = y;
+    ctx.lineTo(currentX, currentY);
 
-  ctx.closePath();
-  ctx.fill();
+    ctx.closePath();
+    ctx.fill();
+  };
+
+  renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#ffffff');
 
   ctx.fillStyle = 'rgba(0, 0, 0)';
   ctx.font = '16px PT Mono';
