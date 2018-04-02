@@ -4,13 +4,15 @@ window.renderStatistics = function (ctx, names, times) {
 
   // Рисуем облако
 
+  
+
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
 
   ctx.beginPath();
-  ctx.moveTo(110, 50);
-  ctx.quadraticCurveTo(180, 0, 250, 50);
-  ctx.quadraticCurveTo(320, 0, 390, 50);
-  ctx.quadraticCurveTo(460, 0, 530, 50);
+  ctx.moveTo(110, 40);
+  ctx.quadraticCurveTo(180, 0, 250, 40);
+  ctx.quadraticCurveTo(320, 0, 390, 40);
+  ctx.quadraticCurveTo(460, 0, 530, 40);
 
   ctx.lineTo(530, 290);
 
@@ -25,10 +27,10 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillStyle = 'rgb(255, 255, 255)';
 
   ctx.beginPath();
-  ctx.moveTo(100, 40);
-  ctx.quadraticCurveTo(170, -10, 240, 40);
-  ctx.quadraticCurveTo(310, -10, 380, 40);
-  ctx.quadraticCurveTo(450, -10, 520, 40);
+  ctx.moveTo(100, 30);
+  ctx.quadraticCurveTo(170, -10, 240, 30);
+  ctx.quadraticCurveTo(310, -10, 380, 30);
+  ctx.quadraticCurveTo(450, -10, 520, 30);
 
   ctx.lineTo(520, 280);
 
@@ -42,10 +44,10 @@ window.renderStatistics = function (ctx, names, times) {
 
   ctx.fillStyle = 'rgba(0, 0, 0)';
   ctx.font = '16px PT Mono';
-  ctx.fillText('Ура вы победили!', 120, 60);
-  ctx.fillText('Список результатов:', 120, 80);
+  ctx.fillText('Ура вы победили!', 120, 50);
+  ctx.fillText('Список результатов:', 120, 70);
 
-  var height = 0;
+  var height = [];
   var maxTime = Math.round(times[0]);
 
   for (var i = 1; i < times.length; i++) {
@@ -59,18 +61,33 @@ window.renderStatistics = function (ctx, names, times) {
   };
 
   for (i = 0; i < times.length; i++) {
-    height = Math.round(times[i] / maxTime * 150);
+    height[i] = Math.round(times[i] / maxTime * 150);
+  }
+
+  var intervals = [];
+  var heightStart = [];
+
+  for (i = 0; i < height.length; i++) {
+    heightStart[i] = 0;
     if (names[i] === 'Вы') {
-      ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+      var fillStyle = 'rgba(255, 0, 0, 1)';
     } else {
       var saturation = getRandomInt(0, 100);
-      ctx.fillStyle = 'hsl(235, ' + saturation + '%, 27%)';
+      fillStyle = 'hsl(235, ' + saturation + '%, 27%)';
     }
+    intervals[i] = setInterval(function (j, fill) {
+      ctx.fillStyle = fill;
+      ctx.fillRect(165 + 90 * j, 250, 40, -heightStart[j]);
 
-    ctx.fillRect(150 + i * 90, 260 - height, 40, height);
+      if (heightStart[j] >= height[j]) {
+        clearInterval(intervals[j]);
+      }
+
+      heightStart[j]++;
+    }, 4, i, fillStyle);
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-    ctx.fillText(names[i], 150 + 90 * i, 275);
+    ctx.fillText(names[i], 165 + 90 * i, 265);
     times[i] = Math.round(times[i]);
-    ctx.fillText(times[i], 150 + 90 * i, 250 - height, 40);
+    ctx.fillText(times[i], 165 + 90 * i, 245 - height[i], 40);
   }
 };
