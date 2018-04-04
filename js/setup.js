@@ -25,4 +25,26 @@ var getWizardsData = function (count) {
   return wizards;
 };
 
-getWizardsData(4);
+var wizards = getWizardsData(4);
+
+var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+
+var fragment = document.createDocumentFragment();
+console.log(fragment);
+
+for (var i = 0; i < wizards.length; i++) {
+  var wizardElement = similarWizardTemplate.cloneNode(true);
+  wizardElement.querySelector('.setup-similar-label').textContent = wizards[i].name;
+
+  fragment.appendChild(wizardElement);
+}
+
+console.log(document.querySelector('.setup-similar-list'));
+
+document.querySelector('.setup-similar-list').appendChild(fragment);
+
+var renderWizard = function () {
+
+};
+
+document.querySelector('.setup .setup-similar').classList.remove('hidden');
