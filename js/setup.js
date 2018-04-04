@@ -8,10 +8,12 @@ var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
 var setupWindow = document.querySelector('.setup');
 setupWindow.classList.remove('hidden');
 
+// Функция, возвращающая случайный элемент массива
 var getRandomArrayElement = function (array) {
   return array[window.getRandomInt(0, array.length - 1)];
 };
 
+// Функция, генерирующая массив с определенным количеством объектов (волшебников)
 var getWizardsData = function (quanity) {
   var wizards = [];
   for (var i = 0; i < quanity; i++) {
@@ -31,6 +33,7 @@ var similarWizardList = setupWindow.querySelector('.setup-similar');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 var fragment = document.createDocumentFragment();
 
+// Функция отрисовки волшебника
 var renderWizard = function (wizardData) {
   var wizardElement = similarWizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = wizardData.name;
@@ -40,6 +43,7 @@ var renderWizard = function (wizardData) {
   return wizardElement;
 };
 
+// Добавляем всех похожих волшебников во фрагмент
 for (var i = 0; i < wizards.length; i++) {
   var wizard = renderWizard(wizards[i]);
   fragment.appendChild(wizard);
