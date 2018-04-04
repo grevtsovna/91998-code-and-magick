@@ -32,7 +32,7 @@ window.renderStatistics = function (ctx, names, times) {
 
     // Рисуем верхнюю кромку облака
 
-    for (var i = 1; i <= CLOUD_TOP_RINGLETS; i++) {
+    for (var i = 0; i < CLOUD_TOP_RINGLETS; i++) {
       var ringletTop = currentY - RINGLET_HEIGTH;
       currentX += TOP_RINGLET_WIDTH;
       var ringletMiddle = currentX - TOP_RINGLET_WIDTH / 2;
