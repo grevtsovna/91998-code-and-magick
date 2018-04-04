@@ -18,7 +18,7 @@ var COLUMN_GAP = 50;
 var COLUMN_PADDING_LEFT = 55;
 var TOP_TEXT_MARGIN = 5;
 
-var renderCloud = function (canvas, x, y, color) {
+var renderCloud = function (ctx, x, y, color) {
   var currentX = x;
   var currentY = y;
 
