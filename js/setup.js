@@ -5,9 +5,6 @@ var surnames = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
 
-var setupWindow = document.querySelector('.setup');
-setupWindow.classList.remove('hidden');
-
 // Функция, возвращающая случайный элемент массива
 var getRandomArrayElement = function (array) {
   return array[window.getRandomInt(0, array.length - 1)];
@@ -27,14 +24,8 @@ var getWizardsData = function (quanity) {
   return wizards;
 };
 
-var wizards = getWizardsData(4);
-
-var similarWizardList = setupWindow.querySelector('.setup-similar');
-var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-var fragment = document.createDocumentFragment();
-
 // Функция отрисовки волшебника
-var renderWizard = function (wizardData) {
+var renderWizard = function (wizardData, similarWizardTemplate) {
   var wizardElement = similarWizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = wizardData.name;
   wizardElement.querySelector('.wizard-coat').style.fill = wizardData.coatColor;
@@ -43,11 +34,23 @@ var renderWizard = function (wizardData) {
   return wizardElement;
 };
 
-// Добавляем всех похожих волшебников во фрагмент
-for (var i = 0; i < wizards.length; i++) {
-  var wizard = renderWizard(wizards[i]);
-  fragment.appendChild(wizard);
-}
+var showSetup = function () {
 
-similarWizardList.querySelector('.setup-similar-list').appendChild(fragment);
-similarWizardList.classList.remove('hidden');
+  var setupWindow = document.querySelector('.setup');
+  setupWindow.classList.remove('hidden');
+  var wizards = getWizardsData(4);
+  var similarWizardList = setupWindow.querySelector('.setup-similar');
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+  var fragment = document.createDocumentFragment();
+
+  // Добавляем всех похожих волшебников во фрагмент
+  for (var i = 0; i < wizards.length; i++) {
+    var wizard = renderWizard(wizards[i], similarWizardTemplate);
+    fragment.appendChild(wizard);
+
+    similarWizardList.querySelector('.setup-similar-list').appendChild(fragment);
+    similarWizardList.classList.remove('hidden');
+  }
+};
+
+showSetup();
