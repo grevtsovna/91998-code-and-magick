@@ -5,19 +5,51 @@ var surnames = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
 
-// Функция, возвращающая случайный элемент массива
-var getRandomArrayElement = function (array) {
-  return array[window.getRandomInt(0, array.length - 1)];
+// Функция, перемешивающая массив
+var shuffleArray = function (array) {
+  var counter = array.length;
+
+  while (counter > 0) {
+    var index = Math.floor(Math.random() * counter);
+    counter--;
+
+    var swap = array[counter];
+    array[counter] = array[index];
+    array[index] = swap;
+  }
+
+  return array;
+};
+
+// Функция, подготавливающая данные для создания волшебников
+var prepareData = function (quanity, array) {
+  var preparedArr = array.slice();
+  if (quanity > preparedArr.length) {
+    shuffleArray(preparedArr);
+    var diff = quanity - preparedArr.length;
+    for (var i = 0; i < diff; i++) {
+      preparedArr.push(preparedArr[i]);
+    }
+  } else {
+    shuffleArray(preparedArr);
+  }
+
+  return preparedArr;
 };
 
 // Функция, генерирующая массив с определенным количеством объектов (волшебников)
 var getWizardsData = function (quanity) {
+  var preparedNames = prepareData(quanity, names);
+  var preparedSurnames = prepareData(quanity, surnames);
+  var preparedCoatColors = prepareData(quanity, coatColors);
+  var preparedEyesColors = prepareData(quanity, eyesColors);
+
   var wizards = [];
   for (var i = 0; i < quanity; i++) {
     wizards[i] = {
-      name: getRandomArrayElement(names) + ' ' + getRandomArrayElement(surnames),
-      coatColor: getRandomArrayElement(coatColors),
-      eyesColor: getRandomArrayElement(eyesColors)
+      name: preparedNames[i] + ' ' + preparedSurnames[i],
+      coatColor: preparedCoatColors[i],
+      eyesColor: preparedEyesColors[i]
     };
   }
 
