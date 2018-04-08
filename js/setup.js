@@ -7,34 +7,34 @@ var eyesColors = ['black', 'red', 'blue', 'yellow', 'green'];
 
 // Функция, перемешивающая массив
 var shuffleArray = function (array) {
-  var counter = array.length;
+  var shuffledArray = array.slice();
+  var counter = shuffledArray.length;
 
   while (counter > 0) {
     var index = Math.floor(Math.random() * counter);
     counter--;
 
-    var swap = array[counter];
-    array[counter] = array[index];
-    array[index] = swap;
+    var swap = shuffledArray[counter];
+    shuffledArray[counter] = shuffledArray[index];
+    shuffledArray[index] = swap;
   }
 
-  return array;
+  return shuffledArray;
 };
 
 // Функция, подготавливающая данные для создания волшебников
 var prepareData = function (quanity, array) {
   var preparedArr = array.slice();
+
   if (quanity > preparedArr.length) {
-    shuffleArray(preparedArr);
-    var diff = quanity - preparedArr.length;
+    var diff = Math.ceil((quanity - preparedArr.length) / preparedArr.length);
+    var preparedArrCopy = preparedArr.slice();
     for (var i = 0; i < diff; i++) {
-      preparedArr.push(preparedArr[i]);
+      preparedArr = preparedArr.concat(preparedArrCopy);
     }
-  } else {
-    shuffleArray(preparedArr);
   }
 
-  return preparedArr;
+  return shuffleArray(preparedArr);
 };
 
 // Функция, генерирующая массив с определенным количеством объектов (волшебников)
