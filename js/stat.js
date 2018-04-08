@@ -41,7 +41,7 @@ var renderCloud = function (ctx, x, y, color) {
   ctx.lineTo(currentX, currentY);
 
   // Рисуем нижнюю кромку облака
-  for (i = 1; i <= CLOUD_BOTTOM_RINGLETS; i++) {
+  for (i = 0; i < CLOUD_BOTTOM_RINGLETS; i++) {
     var ringletBottom = currentY + RINGLET_HEIGTH;
     currentX -= BOTTOM_RINGLET_WIDTH;
     ringletMiddle = currentX + BOTTOM_RINGLET_WIDTH / 2;
@@ -75,12 +75,12 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillText('Список результатов:', CLOUD_X + PADDING_LEFT, CLOUD_Y + PADDING_TOP * 2);
 
   var heightOfColumns = [];
-  var maxTime = Math.round(times[0]);
+  var maxTime = times[0];
 
   // Находим максимальное значение времени
   for (var i = 1; i < times.length; i++) {
     if (times[i] > maxTime) {
-      maxTime = Math.round(times[i]);
+      maxTime = times[i];
     }
   }
 
