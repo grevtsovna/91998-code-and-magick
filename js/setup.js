@@ -69,11 +69,22 @@ var renderWizard = function (wizardData, similarWizardTemplate) {
 var showSetup = function () {
 
   var setupWindow = document.querySelector('.setup');
-  setupWindow.classList.remove('hidden');
   var wizards = getWizardsData(4);
   var similarWizardList = setupWindow.querySelector('.setup-similar');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
   var fragment = document.createDocumentFragment();
+  var openSetupButton = document.querySelector('.setup-open');
+  var closeSetupButton = setupWindow.querySelector('.setup-close');
+
+  var openSetupWindow = function () {
+    setupWindow.classList.remove('hidden');
+  };
+  var closeSetupWindow = function () {
+    setupWindow.classList.add('hidden');
+  };
+
+  openSetupButton.addEventListener('click', openSetupWindow);
+  closeSetupButton.addEventListener('click', closeSetupWindow);
 
   // Добавляем всех похожих волшебников во фрагмент
   for (var i = 0; i < wizards.length; i++) {
