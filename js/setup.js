@@ -84,6 +84,11 @@ var showSetup = function () {
   };
 
   openSetupButton.addEventListener('click', openSetupWindow);
+  openSetupButton.querySelector('.setup-open-icon').addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 13) {
+      openSetupWindow();
+    }
+  });
   closeSetupButton.addEventListener('click', closeSetupWindow);
 
   // Добавляем всех похожих волшебников во фрагмент
