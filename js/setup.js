@@ -75,12 +75,30 @@ var showSetup = function () {
   var fragment = document.createDocumentFragment();
   var openSetupButton = document.querySelector('.setup-open');
   var closeSetupButton = setupWindow.querySelector('.setup-close');
+  var setupUserNameButton = setupWindow.querySelector('.setup-user-name');
 
   var openSetupWindow = function () {
     setupWindow.classList.remove('hidden');
+
+    closeSetupButton.addEventListener('click', function () {
+      closeSetupWindow();
+    });
+    setupUserNameButton.addEventListener('keydown', onSetupUserNameFocus);
+    document.addEventListener('keydown', onPopupEscPress);
   };
+
   var closeSetupWindow = function () {
     setupWindow.classList.add('hidden');
+  };
+
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === 27) {
+      closeSetupWindow();
+    }
+  };
+
+  var onSetupUserNameFocus = function (evt) {
+    evt.stopPropagation();
   };
 
   openSetupButton.addEventListener('click', openSetupWindow);
@@ -89,7 +107,6 @@ var showSetup = function () {
       openSetupWindow();
     }
   });
-  closeSetupButton.addEventListener('click', closeSetupWindow);
 
   // Добавляем всех похожих волшебников во фрагмент
   for (var i = 0; i < wizards.length; i++) {
