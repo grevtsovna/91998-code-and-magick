@@ -83,6 +83,7 @@ var showSetup = function () {
     closeSetupButton.addEventListener('click', function () {
       closeSetupWindow();
     });
+    closeSetupButton.addEventListener('keydown', onCloseSetupButtonEscPress);
     setupUserNameButton.addEventListener('keydown', onSetupUserNameFocus);
     document.addEventListener('keydown', onPopupEscPress);
   };
@@ -99,6 +100,12 @@ var showSetup = function () {
 
   var onSetupUserNameFocus = function (evt) {
     evt.stopPropagation();
+  };
+
+  var onCloseSetupButtonEscPress = function (evt) {
+    if (evt.keyCode === 13) {
+      closeSetupWindow();
+    }
   };
 
   openSetupButton.addEventListener('click', openSetupWindow);
