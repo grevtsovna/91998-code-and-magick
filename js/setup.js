@@ -66,7 +66,13 @@ var renderWizard = function (wizardData, similarWizardTemplate) {
   return wizardElement;
 };
 
+// Функция, аозвращающая случайный элемент массива
+var getRandomArrayElement = function (array) {
+  return array[window.getRandomInt(0, array.length - 1)];
+};
+
 var showSetup = function () {
+  var FIREBALL_COLORS = ['##ee4830', '#30a8ee', '#30a8ee', '#e848d5', '#e6e848'];
 
   var setupWindow = document.querySelector('.setup');
   var wizards = getWizardsData(4);
@@ -76,6 +82,8 @@ var showSetup = function () {
   var openSetupButton = document.querySelector('.setup-open');
   var closeSetupButton = setupWindow.querySelector('.setup-close');
   var setupUserNameButton = setupWindow.querySelector('.setup-user-name');
+  var wizardEyes = setupWindow.querySelector('.setup-wizard .wizard-eyes');
+  var wizardFireball = setupWindow.querySelector('.setup-fireball-wrap');
 
   var openSetupWindow = function () {
     setupWindow.classList.remove('hidden');
@@ -86,6 +94,8 @@ var showSetup = function () {
     closeSetupButton.addEventListener('keydown', onCloseSetupButtonEscPress);
     setupUserNameButton.addEventListener('keydown', onSetupUserNameFocus);
     document.addEventListener('keydown', onPopupEscPress);
+    wizardEyes.addEventListener('click', onWizardEyesClick);
+    wizardFireball.addEventListener('click', onFireballClick);
   };
 
   var closeSetupWindow = function () {
@@ -106,6 +116,14 @@ var showSetup = function () {
     if (evt.keyCode === 13) {
       closeSetupWindow();
     }
+  };
+
+  var onWizardEyesClick = function () {
+    wizardEyes.style.fill = getRandomArrayElement(eyesColors);
+  };
+
+  var onFireballClick = function () {
+    wizardFireball.style.backgroundColor = getRandomArrayElement(FIREBALL_COLORS);
   };
 
   openSetupButton.addEventListener('click', openSetupWindow);
