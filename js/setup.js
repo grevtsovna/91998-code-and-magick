@@ -1,5 +1,8 @@
 'use strict';
 
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 var names = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var surnames = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
@@ -72,8 +75,6 @@ var getRandomArrayElement = function (array) {
 };
 
 var showSetup = function () {
-  var FIREBALL_COLORS = ['##ee4830', '#30a8ee', '#30a8ee', '#e848d5', '#e6e848'];
-
   var setupWindow = document.querySelector('.setup');
   var wizards = getWizardsData(4);
   var similarWizardList = setupWindow.querySelector('.setup-similar');
@@ -84,6 +85,8 @@ var showSetup = function () {
   var setupUserNameButton = setupWindow.querySelector('.setup-user-name');
   var wizardEyes = setupWindow.querySelector('.setup-wizard .wizard-eyes');
   var wizardFireball = setupWindow.querySelector('.setup-fireball-wrap');
+  var wizardEyesColorInput = setupWindow.querySelector('input[name=eyes-color');
+  var wizardFireballColorInput = setupWindow.querySelector('input[name=fireball-color');
 
   var openSetupWindow = function () {
     setupWindow.classList.remove('hidden');
@@ -91,7 +94,7 @@ var showSetup = function () {
     closeSetupButton.addEventListener('click', function () {
       closeSetupWindow();
     });
-    closeSetupButton.addEventListener('keydown', onCloseSetupButtonEscPress);
+    closeSetupButton.addEventListener('keydown', onCloseSetupButtonEnterPress);
     setupUserNameButton.addEventListener('keydown', onSetupUserNameFocus);
     document.addEventListener('keydown', onPopupEscPress);
     wizardEyes.addEventListener('click', onWizardEyesClick);
@@ -100,10 +103,16 @@ var showSetup = function () {
 
   var closeSetupWindow = function () {
     setupWindow.classList.add('hidden');
+
+    closeSetupButton.removeEventListener('keydown', onCloseSetupButtonEnterPress);
+    setupUserNameButton.removeEventListener('keydown', onSetupUserNameFocus);
+    document.removeEventListener('keydown', onPopupEscPress);
+    wizardEyes.removeEventListener('click', onWizardEyesClick);
+    wizardFireball.removeEventListener('click', onFireballClick);
   };
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === 27) {
+    if (evt.keyCode === ESC_KEYCODE) {
       closeSetupWindow();
     }
   };
@@ -112,26 +121,23 @@ var showSetup = function () {
     evt.stopPropagation();
   };
 
-  var onCloseSetupButtonEscPress = function (evt) {
-    if (evt.keyCode === 13) {
+  var onCloseSetupButtonEnterPress = function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
       closeSetupWindow();
     }
   };
 
   var onWizardEyesClick = function () {
-    wizardEyes.style.fill = getRandomArrayElement(eyesColors);
+    var newEyesColor = getRandomArrayElement(eyesColors);
+    wizardEyesColorInput.value = newEyesColor;
+    wizardEyes.style.fill = newEyesColor;
   };
 
   var onFireballClick = function () {
-    wizardFireball.style.backgroundColor = getRandomArrayElement(FIREBALL_COLORS);
+    var newFireballColor = getRandomArrayElement(FIREBALL_COLORS);
+    wizardFireballColorInput.value = newFireballColor;
+    wizardFireball.style.backgroundColor = newFireballColor;
   };
-
-  openSetupButton.addEventListener('click', openSetupWindow);
-  openSetupButton.querySelector('.setup-open-icon').addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 13) {
-      openSetupWindow();
-    }
-  });
 
   // Добавляем всех похожих волшебников во фрагмент
   for (var i = 0; i < wizards.length; i++) {
@@ -141,6 +147,13 @@ var showSetup = function () {
     similarWizardList.querySelector('.setup-similar-list').appendChild(fragment);
     similarWizardList.classList.remove('hidden');
   }
+
+  openSetupButton.addEventListener('click', openSetupWindow);
+  openSetupButton.querySelector('.setup-open-icon').addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 13) {
+      openSetupWindow();
+    }
+  });
 };
 
 showSetup();
