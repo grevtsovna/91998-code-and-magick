@@ -74,7 +74,7 @@ var getRandomArrayElement = function (array) {
   return array[window.getRandomInt(0, array.length - 1)];
 };
 
-var showSetup = function () {
+var applySetupEventHandlers = function () {
   var setupWindow = document.querySelector('.setup');
   var wizards = getWizardsData(4);
   var similarWizardList = setupWindow.querySelector('.setup-similar');
@@ -82,11 +82,12 @@ var showSetup = function () {
   var fragment = document.createDocumentFragment();
   var openSetupButton = document.querySelector('.setup-open');
   var closeSetupButton = setupWindow.querySelector('.setup-close');
-  var setupUserNameButton = setupWindow.querySelector('.setup-user-name');
+  var setupUserNameInput = setupWindow.querySelector('.setup-user-name');
   var wizardEyes = setupWindow.querySelector('.setup-wizard .wizard-eyes');
   var wizardFireball = setupWindow.querySelector('.setup-fireball-wrap');
   var wizardEyesColorInput = setupWindow.querySelector('input[name=eyes-color');
   var wizardFireballColorInput = setupWindow.querySelector('input[name=fireball-color');
+  var openSetupIcon = openSetupButton.querySelector('.setup-open-icon');
 
   var openSetupWindow = function () {
     setupWindow.classList.remove('hidden');
@@ -95,8 +96,8 @@ var showSetup = function () {
       closeSetupWindow();
     });
     closeSetupButton.addEventListener('keydown', onCloseSetupButtonEnterPress);
-    setupUserNameButton.addEventListener('keydown', onSetupUserNameFocus);
-    document.addEventListener('keydown', onPopupEscPress);
+    setupUserNameInput.addEventListener('keydown', onSetupUserNameKeydown);
+    document.addEventListener('keydown', onPopupKeyPress);
     wizardEyes.addEventListener('click', onWizardEyesClick);
     wizardFireball.addEventListener('click', onFireballClick);
   };
@@ -105,19 +106,19 @@ var showSetup = function () {
     setupWindow.classList.add('hidden');
 
     closeSetupButton.removeEventListener('keydown', onCloseSetupButtonEnterPress);
-    setupUserNameButton.removeEventListener('keydown', onSetupUserNameFocus);
-    document.removeEventListener('keydown', onPopupEscPress);
+    setupUserNameInput.removeEventListener('keydown', onSetupUserNameKeydown);
+    document.removeEventListener('keydown', onPopupKeyPress);
     wizardEyes.removeEventListener('click', onWizardEyesClick);
     wizardFireball.removeEventListener('click', onFireballClick);
   };
 
-  var onPopupEscPress = function (evt) {
+  var onPopupKeyPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeSetupWindow();
     }
   };
 
-  var onSetupUserNameFocus = function (evt) {
+  var onSetupUserNameKeydown = function (evt) {
     evt.stopPropagation();
   };
 
@@ -139,6 +140,12 @@ var showSetup = function () {
     wizardFireball.style.backgroundColor = newFireballColor;
   };
 
+  var onOpenSetupIconKeydown = function (evt) {
+    if (evt.keyCode === 13) {
+      openSetupWindow();
+    }
+  };
+
   // Добавляем всех похожих волшебников во фрагмент
   for (var i = 0; i < wizards.length; i++) {
     var wizard = renderWizard(wizards[i], similarWizardTemplate);
@@ -149,11 +156,7 @@ var showSetup = function () {
   }
 
   openSetupButton.addEventListener('click', openSetupWindow);
-  openSetupButton.querySelector('.setup-open-icon').addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 13) {
-      openSetupWindow();
-    }
-  });
+  openSetupIcon.addEventListener('keydown', onOpenSetupIconKeydown);
 };
 
-showSetup();
+applySetupEventHandlers();
