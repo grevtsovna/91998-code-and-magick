@@ -1,5 +1,8 @@
 'use strict';
 
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 var names = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var surnames = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var coatColors = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
@@ -66,14 +69,82 @@ var renderWizard = function (wizardData, similarWizardTemplate) {
   return wizardElement;
 };
 
-var showSetup = function () {
+// Функция, аозвращающая случайный элемент массива
+var getRandomArrayElement = function (array) {
+  return array[window.getRandomInt(0, array.length - 1)];
+};
 
+var applySetupEventHandlers = function () {
   var setupWindow = document.querySelector('.setup');
-  setupWindow.classList.remove('hidden');
   var wizards = getWizardsData(4);
   var similarWizardList = setupWindow.querySelector('.setup-similar');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
   var fragment = document.createDocumentFragment();
+  var openSetupButton = document.querySelector('.setup-open');
+  var closeSetupButton = setupWindow.querySelector('.setup-close');
+  var setupUserNameInput = setupWindow.querySelector('.setup-user-name');
+  var wizardEyes = setupWindow.querySelector('.setup-wizard .wizard-eyes');
+  var wizardFireball = setupWindow.querySelector('.setup-fireball-wrap');
+  var wizardEyesColorInput = setupWindow.querySelector('input[name=eyes-color');
+  var wizardFireballColorInput = setupWindow.querySelector('input[name=fireball-color');
+  var openSetupIcon = openSetupButton.querySelector('.setup-open-icon');
+
+  var openSetupWindow = function () {
+    setupWindow.classList.remove('hidden');
+
+    closeSetupButton.addEventListener('click', function () {
+      closeSetupWindow();
+    });
+    closeSetupButton.addEventListener('keydown', onCloseSetupButtonEnterPress);
+    setupUserNameInput.addEventListener('keydown', onSetupUserNameKeydown);
+    document.addEventListener('keydown', onPopupKeyPress);
+    wizardEyes.addEventListener('click', onWizardEyesClick);
+    wizardFireball.addEventListener('click', onFireballClick);
+  };
+
+  var closeSetupWindow = function () {
+    setupWindow.classList.add('hidden');
+
+    closeSetupButton.removeEventListener('keydown', onCloseSetupButtonEnterPress);
+    setupUserNameInput.removeEventListener('keydown', onSetupUserNameKeydown);
+    document.removeEventListener('keydown', onPopupKeyPress);
+    wizardEyes.removeEventListener('click', onWizardEyesClick);
+    wizardFireball.removeEventListener('click', onFireballClick);
+  };
+
+  var onPopupKeyPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeSetupWindow();
+    }
+  };
+
+  var onSetupUserNameKeydown = function (evt) {
+    evt.stopPropagation();
+  };
+
+  var onCloseSetupButtonEnterPress = function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      closeSetupWindow();
+    }
+  };
+
+  var onWizardEyesClick = function () {
+    var newEyesColor = getRandomArrayElement(eyesColors);
+    wizardEyesColorInput.value = newEyesColor;
+    wizardEyes.style.fill = newEyesColor;
+  };
+
+  var onFireballClick = function () {
+    var newFireballColor = getRandomArrayElement(FIREBALL_COLORS);
+    wizardFireballColorInput.value = newFireballColor;
+    wizardFireball.style.backgroundColor = newFireballColor;
+  };
+
+  var onOpenSetupIconKeydown = function (evt) {
+    if (evt.keyCode === 13) {
+      openSetupWindow();
+    }
+  };
 
   // Добавляем всех похожих волшебников во фрагмент
   for (var i = 0; i < wizards.length; i++) {
@@ -83,6 +154,9 @@ var showSetup = function () {
     similarWizardList.querySelector('.setup-similar-list').appendChild(fragment);
     similarWizardList.classList.remove('hidden');
   }
+
+  openSetupButton.addEventListener('click', openSetupWindow);
+  openSetupIcon.addEventListener('keydown', onOpenSetupIconKeydown);
 };
 
-showSetup();
+applySetupEventHandlers();
