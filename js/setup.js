@@ -159,4 +159,36 @@ var applySetupEventHandlers = function () {
   openSetupIcon.addEventListener('keydown', onOpenSetupIconKeydown);
 };
 
+var applySetupDragHandlers = function () {
+  var setupWindow = document.querySelector('.setup');
+  var setupHandle = document.querySelector('.setup-user-pic');
+
+  setupHandle.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    console.log(123);
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      var shift = {
+        x: moveEvt.clientX - startCoords.x,
+        y: moveEvt.clientY - startCoords.y
+      };
+      console.log(123);
+
+      startCoords.x = moveEvt.clientX;
+      startCoords.y = moveEvt.clientY;
+
+      setupWindow.style.top = (setupWindow.offsetTop - shift.y) + 'px';
+      setupWindow.style.left = (setupWindow.offsetLeft - shift.x) + 'px';
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    // document.addEventListener('mouseup', onMouseUp);
+  });
+};
+
 applySetupEventHandlers();
+applySetupDragHandlers();
