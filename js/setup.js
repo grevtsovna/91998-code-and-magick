@@ -162,3 +162,17 @@ var applySetupEventHandlers = function () {
 };
 
 applySetupEventHandlers();
+
+(function () {
+  var draggedItem = null;
+  var shopEl = document.querySelector('.setup-artifacts-shop');
+  var activeArtifactsEl = document.querySelector('.setup-artifacts');
+
+  shopEl.addEventListener('dragstart', function(evt) {
+    if (evt.target.tagName.toLowerCase() === 'img') {
+      draggedItem = evt.target;
+      evt.dataTransfer.setData('text/plain', evt.target.alt);
+      activeArtifactsEl.style.outline = '2px dashed red';
+    }
+  });
+})();
